@@ -1,7 +1,8 @@
-import cv2
-import numpy as np
 from argparse import ArgumentParser
 from pathlib import Path
+
+import cv2
+import numpy as np
 from utils.compute_iou import compute_ious
 
 
@@ -26,25 +27,23 @@ def segment_fish(img):
     dark_white = (145, 150, 255)
 
     # Create a mask by checking if the HSV image falls within the orange and white color ranges
-    mask = (cv2.inRange(img_hsv, light_orange, dark_orange) + cv2.inRange(img_hsv, light_white, dark_white))
+    mask = cv2.inRange(img_hsv, light_orange, dark_orange) + cv2.inRange(img_hsv, light_white, dark_white)
 
     # Apply morphological operations (closing followed by opening) to remove small holes and noise in the mask
-    return cv2.morphologyEx(cv2.morphologyEx(mask, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8)), cv2.MORPH_OPEN,
-                            np.ones((5, 5), np.uint8))
+    return cv2.morphologyEx(cv2.morphologyEx(mask, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8)), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
 
 
 if __name__ == "__main__":
-
     parser = ArgumentParser()
     parser.add_argument("--is_train", action="store_true")
     args = parser.parse_args()
 
-    stage = 'train' if args.is_train else 'test'
+    stage = "train" if args.is_train else "test"
 
     try:
         images = [img_path for img_path in Path("dataset", stage, "imgs").glob("*.jpg")]
     except FileNotFoundError:
-        print(f"Image folder is empty!\nPlease download images into image folder")
+        print("Image folder is empty!\nPlease download images into image folder")
         exit(1)
 
     masks = {img.name: segment_fish(cv2.imread(str(img))) for img in images}
