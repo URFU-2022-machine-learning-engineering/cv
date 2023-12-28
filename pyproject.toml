@@ -11,6 +11,9 @@ python = "^3.11"
 numpy = "^1.26.2"
 pandas = "^2.1.4"
 opencv-python = "^4.8.1.78"
+torch = "^2.1.2"
+torchvision = "^0.16.2"
+torcheval = "^0.0.7"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
